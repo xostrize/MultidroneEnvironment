@@ -1,0 +1,42 @@
+package ardrone_autonomy;
+
+public interface navdata_magneto extends org.ros.internal.message.Message {
+  static final java.lang.String _TYPE = "ardrone_autonomy/navdata_magneto";
+  static final java.lang.String _DEFINITION = "Header header\nfloat64 drone_time\nuint16 tag\nuint16 size\nint16 mx\nint16 my\nint16 mz\nvector31 magneto_raw\nvector31 magneto_rectified\nvector31 magneto_offset\nfloat32 heading_unwrapped\nfloat32 heading_gyro_unwrapped\nfloat32 heading_fusion_unwrapped\nuint8 magneto_calibration_ok\nuint32 magneto_state\nfloat32 magneto_radius\nfloat32 error_mean\nfloat32 error_var\n";
+  std_msgs.Header getHeader();
+  void setHeader(std_msgs.Header value);
+  double getDroneTime();
+  void setDroneTime(double value);
+  short getTag();
+  void setTag(short value);
+  short getSize();
+  void setSize(short value);
+  short getMx();
+  void setMx(short value);
+  short getMy();
+  void setMy(short value);
+  short getMz();
+  void setMz(short value);
+  ardrone_autonomy.vector31 getMagnetoRaw();
+  void setMagnetoRaw(ardrone_autonomy.vector31 value);
+  ardrone_autonomy.vector31 getMagnetoRectified();
+  void setMagnetoRectified(ardrone_autonomy.vector31 value);
+  ardrone_autonomy.vector31 getMagnetoOffset();
+  void setMagnetoOffset(ardrone_autonomy.vector31 value);
+  float getHeadingUnwrapped();
+  void setHeadingUnwrapped(float value);
+  float getHeadingGyroUnwrapped();
+  void setHeadingGyroUnwrapped(float value);
+  float getHeadingFusionUnwrapped();
+  void setHeadingFusionUnwrapped(float value);
+  byte getMagnetoCalibrationOk();
+  void setMagnetoCalibrationOk(byte value);
+  int getMagnetoState();
+  void setMagnetoState(int value);
+  float getMagnetoRadius();
+  void setMagnetoRadius(float value);
+  float getErrorMean();
+  void setErrorMean(float value);
+  float getErrorVar();
+  void setErrorVar(float value);
+}

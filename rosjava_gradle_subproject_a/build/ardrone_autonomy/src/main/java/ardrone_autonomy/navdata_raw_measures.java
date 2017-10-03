@@ -1,0 +1,44 @@
+package ardrone_autonomy;
+
+public interface navdata_raw_measures extends org.ros.internal.message.Message {
+  static final java.lang.String _TYPE = "ardrone_autonomy/navdata_raw_measures";
+  static final java.lang.String _DEFINITION = "Header header\nfloat64 drone_time\nuint16 tag\nuint16 size\nint16[] raw_gyros\nint16[] raw_gyros_110\nuint32 vbat_raw\nuint16 us_debut_echo\nuint16 us_fin_echo\nuint16 us_association_echo\nuint16 us_distance_echo\nuint16 us_courbe_temps\nuint16 us_courbe_valeur\nuint16 us_courbe_ref\nuint16 flag_echo_ini\nuint16 nb_echo\nuint32 sum_echo\nint32 alt_temp_raw\nint16 gradient\n";
+  std_msgs.Header getHeader();
+  void setHeader(std_msgs.Header value);
+  double getDroneTime();
+  void setDroneTime(double value);
+  short getTag();
+  void setTag(short value);
+  short getSize();
+  void setSize(short value);
+  short[] getRawGyros();
+  void setRawGyros(short[] value);
+  short[] getRawGyros110();
+  void setRawGyros110(short[] value);
+  int getVbatRaw();
+  void setVbatRaw(int value);
+  short getUsDebutEcho();
+  void setUsDebutEcho(short value);
+  short getUsFinEcho();
+  void setUsFinEcho(short value);
+  short getUsAssociationEcho();
+  void setUsAssociationEcho(short value);
+  short getUsDistanceEcho();
+  void setUsDistanceEcho(short value);
+  short getUsCourbeTemps();
+  void setUsCourbeTemps(short value);
+  short getUsCourbeValeur();
+  void setUsCourbeValeur(short value);
+  short getUsCourbeRef();
+  void setUsCourbeRef(short value);
+  short getFlagEchoIni();
+  void setFlagEchoIni(short value);
+  short getNbEcho();
+  void setNbEcho(short value);
+  int getSumEcho();
+  void setSumEcho(int value);
+  int getAltTempRaw();
+  void setAltTempRaw(int value);
+  short getGradient();
+  void setGradient(short value);
+}

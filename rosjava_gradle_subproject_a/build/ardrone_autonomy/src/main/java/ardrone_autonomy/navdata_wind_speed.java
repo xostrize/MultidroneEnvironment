@@ -1,0 +1,40 @@
+package ardrone_autonomy;
+
+public interface navdata_wind_speed extends org.ros.internal.message.Message {
+  static final java.lang.String _TYPE = "ardrone_autonomy/navdata_wind_speed";
+  static final java.lang.String _DEFINITION = "Header header\nfloat64 drone_time\nuint16 tag\nuint16 size\nfloat32 wind_speed\nfloat32 wind_angle\nfloat32 wind_compensation_theta\nfloat32 wind_compensation_phi\nfloat32 state_x1\nfloat32 state_x2\nfloat32 state_x3\nfloat32 state_x4\nfloat32 state_x5\nfloat32 state_x6\nfloat32 magneto_debug1\nfloat32 magneto_debug2\nfloat32 magneto_debug3\n";
+  std_msgs.Header getHeader();
+  void setHeader(std_msgs.Header value);
+  double getDroneTime();
+  void setDroneTime(double value);
+  short getTag();
+  void setTag(short value);
+  short getSize();
+  void setSize(short value);
+  float getWindSpeed();
+  void setWindSpeed(float value);
+  float getWindAngle();
+  void setWindAngle(float value);
+  float getWindCompensationTheta();
+  void setWindCompensationTheta(float value);
+  float getWindCompensationPhi();
+  void setWindCompensationPhi(float value);
+  float getStateX1();
+  void setStateX1(float value);
+  float getStateX2();
+  void setStateX2(float value);
+  float getStateX3();
+  void setStateX3(float value);
+  float getStateX4();
+  void setStateX4(float value);
+  float getStateX5();
+  void setStateX5(float value);
+  float getStateX6();
+  void setStateX6(float value);
+  float getMagnetoDebug1();
+  void setMagnetoDebug1(float value);
+  float getMagnetoDebug2();
+  void setMagnetoDebug2(float value);
+  float getMagnetoDebug3();
+  void setMagnetoDebug3(float value);
+}

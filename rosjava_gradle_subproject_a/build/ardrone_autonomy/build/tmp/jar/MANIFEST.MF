@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Export-Package: ardrone_autonomy;version="1.4.1";uses:="org.jboss.nett
+ y.buffer,org.ros.internal.message,std_msgs"
+Bundle-Version: 1.4.1
+Tool: Bnd-2.1.0.20130426-122213
+Bundle-Name: ardrone_autonomy
+Bnd-LastModified: 1506008831000
+Created-By: 1.7.0_151 (Oracle Corporation)
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.ros.rosjava_messages.ardrone_autonomy
+Import-Package: org.jboss.netty.buffer;version="[3.5,4)",org.ros.inter
+ nal.message,std_msgs;version="[0.5,1)"
+

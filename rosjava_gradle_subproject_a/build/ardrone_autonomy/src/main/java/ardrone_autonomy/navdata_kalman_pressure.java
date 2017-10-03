@@ -1,0 +1,48 @@
+package ardrone_autonomy;
+
+public interface navdata_kalman_pressure extends org.ros.internal.message.Message {
+  static final java.lang.String _TYPE = "ardrone_autonomy/navdata_kalman_pressure";
+  static final java.lang.String _DEFINITION = "Header header\nfloat64 drone_time\nuint16 tag\nuint16 size\nfloat32 offset_pressure\nfloat32 est_z\nfloat32 est_zdot\nfloat32 est_bias_PWM\nfloat32 est_biais_pression\nfloat32 offset_US\nfloat32 prediction_US\nfloat32 cov_alt\nfloat32 cov_PWM\nfloat32 cov_vitesse\nint32 bool_effet_sol\nfloat32 somme_inno\nint32 flag_rejet_US\nfloat32 u_multisinus\nfloat32 gaz_altitude\nint32 Flag_multisinus\nint32 Flag_multisinus_debut\n";
+  std_msgs.Header getHeader();
+  void setHeader(std_msgs.Header value);
+  double getDroneTime();
+  void setDroneTime(double value);
+  short getTag();
+  void setTag(short value);
+  short getSize();
+  void setSize(short value);
+  float getOffsetPressure();
+  void setOffsetPressure(float value);
+  float getEstZ();
+  void setEstZ(float value);
+  float getEstZdot();
+  void setEstZdot(float value);
+  float getEstBiasPWM();
+  void setEstBiasPWM(float value);
+  float getEstBiaisPression();
+  void setEstBiaisPression(float value);
+  float getOffsetUS();
+  void setOffsetUS(float value);
+  float getPredictionUS();
+  void setPredictionUS(float value);
+  float getCovAlt();
+  void setCovAlt(float value);
+  float getCovPWM();
+  void setCovPWM(float value);
+  float getCovVitesse();
+  void setCovVitesse(float value);
+  int getBoolEffetSol();
+  void setBoolEffetSol(int value);
+  float getSommeInno();
+  void setSommeInno(float value);
+  int getFlagRejetUS();
+  void setFlagRejetUS(int value);
+  float getUMultisinus();
+  void setUMultisinus(float value);
+  float getGazAltitude();
+  void setGazAltitude(float value);
+  int getFlagMultisinus();
+  void setFlagMultisinus(int value);
+  int getFlagMultisinusDebut();
+  void setFlagMultisinusDebut(int value);
+}
