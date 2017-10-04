@@ -14,10 +14,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Vector;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import org.ros.node.ConnectedNode;
 
@@ -36,12 +37,13 @@ public class AppWindow extends javax.swing.JFrame {
     private Project project = new Project("demoProject");
     private boolean interrupt;
     private final ConnectedNode connectedNode;
+    private final ArrayList<JButton> buttonList = new ArrayList<JButton>();
 
     /**
      * Creates new form AppWindow
      */
     public AppWindow(final ConnectedNode connectedNode) {
-        this.connectedNode=connectedNode;
+        this.connectedNode = connectedNode;
         initComponents();
         Ddrone1 = new Drone("ardrone_1", connectedNode);
         Ddrone2 = new Drone("ardrone_2", connectedNode);
@@ -53,11 +55,10 @@ public class AppWindow extends javax.swing.JFrame {
         buttonGroup2.add(jRadioButton1);
         buttonGroup2.add(jRadioButton2);
         dataModel = new DefaultTableModel();
-        project.addSubproject(new ArrayList<Command>(), "ardrone_1", Ddrone1);
-        project.addSubproject(new ArrayList<Command>(), "ardrone_2", Ddrone2);
-        project.addSubproject(new ArrayList<Command>(), "ardrone_3", Ddrone3);
+        // project.addSubproject(new ArrayList<Command>(), "ardrone_1", Ddrone1);
+        // project.addSubproject(new ArrayList<Command>(), "bellll", Ddrone2);
+        // project.addSubproject(new ArrayList<Command>(), "ardrone_3", Ddrone3);
         jRadioButton1.setSelected(true);
-        jTable1.setModel(project);
     }
 
     private void setupTimer() {
@@ -103,6 +104,8 @@ public class AppWindow extends javax.swing.JFrame {
         mainPanel = new java.awt.Panel();
         panelOne = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jSpinner3 = new javax.swing.JSpinner();
         panelTwo = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
@@ -119,11 +122,8 @@ public class AppWindow extends javax.swing.JFrame {
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
         stateDrone1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         stateDrone2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         stateDrone3 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         battery1 = new javax.swing.JLabel();
         battery2 = new javax.swing.JLabel();
         battery3 = new javax.swing.JLabel();
@@ -139,6 +139,9 @@ public class AppWindow extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jSpinner2 = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
+        jSpinner4 = new javax.swing.JSpinner();
+        jCheckBox4 = new javax.swing.JCheckBox();
+        arrayButton = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -150,7 +153,7 @@ public class AppWindow extends javax.swing.JFrame {
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
-        jButton1.setText("manualControl");
+        jButton1.setText("next >");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -161,7 +164,37 @@ public class AppWindow extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        panelOne.add(jButton1);
+
+        jLabel6.setText("How many drone you want use?");
+
+        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
+
+        javax.swing.GroupLayout panelOneLayout = new javax.swing.GroupLayout(panelOne);
+        panelOne.setLayout(panelOneLayout);
+        panelOneLayout.setHorizontalGroup(
+            panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOneLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+            .addGroup(panelOneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addGap(18, 18, 18)
+                .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(352, Short.MAX_VALUE))
+        );
+        panelOneLayout.setVerticalGroup(
+            panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOneLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 557, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
 
         mainPanel.add(panelOne, "card2");
 
@@ -293,12 +326,6 @@ public class AppWindow extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("192.168.0.133");
-
-        jLabel2.setText("192.168.0.134");
-
-        jLabel3.setText("192.168.0.135");
-
         battery1.setText("jLabel4");
 
         battery2.setText("jLabel5");
@@ -307,13 +334,10 @@ public class AppWindow extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
-                "ardrone_1", "foo", "ardrone_3"
+
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -366,6 +390,17 @@ public class AppWindow extends javax.swing.JFrame {
 
         jLabel5.setText("Power [%]");
 
+        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+
+        jCheckBox4.setText("all");
+        jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox4ActionPerformed(evt);
+            }
+        });
+
+        arrayButton.setLayout(new java.awt.GridLayout());
+
         javax.swing.GroupLayout panelTwoLayout = new javax.swing.GroupLayout(panelTwo);
         panelTwo.setLayout(panelTwoLayout);
         panelTwoLayout.setHorizontalGroup(
@@ -373,19 +408,8 @@ public class AppWindow extends javax.swing.JFrame {
             .addGroup(panelTwoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTwoLayout.createSequentialGroup()
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(panelTwoLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())
-                    .addGroup(panelTwoLayout.createSequentialGroup()
-                        .addComponent(jCheckBox1)
-                        .addGap(59, 59, 59)
-                        .addComponent(jCheckBox2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jCheckBox3)
-                        .addGap(218, 218, 218))
+                    .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
                         .addComponent(jButton2)
                         .addGap(36, 36, 36)
@@ -405,7 +429,7 @@ public class AppWindow extends javax.swing.JFrame {
                                         .addComponent(jButton8)
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGap(0, 18, Short.MAX_VALUE)
                                         .addComponent(jLabel5)
                                         .addGap(18, 18, 18)
                                         .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -414,55 +438,61 @@ public class AppWindow extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jRadioButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jSpinner1))))
-                        .addContainerGap())
+                                    .addComponent(jSpinner1)))))
+                    .addGroup(panelTwoLayout.createSequentialGroup()
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3)
+                            .addComponent(jButton4))
+                        .addGap(77, 77, 77)
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton7)
+                            .addComponent(jButton5))
+                        .addGap(107, 107, 107)
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelTwoLayout.createSequentialGroup()
+                                .addComponent(jButton9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelTwoLayout.createSequentialGroup()
+                                .addComponent(jButton10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelTwoLayout.createSequentialGroup()
                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTwoLayout.createSequentialGroup()
-                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton3)
-                                    .addComponent(jButton4))
-                                .addGap(77, 77, 77)
-                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton7)
-                                    .addComponent(jButton5))
-                                .addGap(107, 107, 107)
-                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addComponent(jButton9)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addComponent(jButton10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jCheckBox1)
+                                .addGap(59, 59, 59)
+                                .addComponent(jCheckBox2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCheckBox3)
+                                .addGap(18, 18, 18)
+                                .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBox4))
                             .addGroup(panelTwoLayout.createSequentialGroup()
                                 .addComponent(stateDrone1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(battery1)
                                     .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addComponent(jLabel1)
                                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(panelTwoLayout.createSequentialGroup()
-                                                .addGap(249, 249, 249)
+                                                .addGap(341, 341, 341)
                                                 .addComponent(stateDrone3))
                                             .addGroup(panelTwoLayout.createSequentialGroup()
-                                                .addGap(40, 40, 40)
+                                                .addGap(132, 132, 132)
                                                 .addComponent(stateDrone2)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(battery2)
-                                                    .addComponent(jLabel2))))
+                                                .addComponent(battery2)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(battery3)
-                                            .addComponent(jLabel3))))))
-                        .addContainerGap())
+                                        .addComponent(battery3)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(100, 100, 100))
                     .addGroup(panelTwoLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(arrayButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelTwoLayout.setVerticalGroup(
             panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -471,24 +501,21 @@ public class AppWindow extends javax.swing.JFrame {
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBox1)
                     .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCheckBox3)
+                    .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCheckBox4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(stateDrone3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(stateDrone2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(stateDrone3)
+                        .addComponent(stateDrone2))
                     .addComponent(stateDrone1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(battery1)
                     .addComponent(battery2)
                     .addComponent(battery3))
-                .addGap(27, 27, 27)
+                .addGap(22, 22, 22)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -522,9 +549,10 @@ public class AppWindow extends javax.swing.JFrame {
                     .addComponent(jButton7)
                     .addComponent(jButton10)
                     .addComponent(jButton15))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(arrayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         mainPanel.add(panelTwo, "card3");
@@ -583,7 +611,25 @@ public class AppWindow extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         CardLayout card = (CardLayout) mainPanel.getLayout();
+
+        int howMany = (int) jSpinner3.getValue();
+
+        for (int i = 0; i < howMany; i++) {
+            JButton btn = new JButton((i + 1) + " -%");
+            btn.setBackground(Color.red);
+            buttonList.add(btn);
+            project.addSubprojectNew("ardrone_" + i, new Drone("ardrone_" + i, connectedNode));
+            TableColumn tc = new TableColumn();
+            tc.setHeaderValue("ardrone_" + i);
+            jTable1.getColumnModel().addColumn(tc);
+        }
+        for (JButton btn : buttonList) {
+            arrayButton.add(btn);
+        }
+        jTable1.setModel(project);
+        jTable1.updateUI();
         card.show(mainPanel, "card3");
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
@@ -654,7 +700,7 @@ public class AppWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
-                 if (drone1 && jRadioButton1.isSelected()) {
+        if (drone1 && jRadioButton1.isSelected()) {
             Ddrone1.down((int) jSpinner2.getValue());
         }
         if (drone2 && jRadioButton1.isSelected()) {
@@ -672,7 +718,7 @@ public class AppWindow extends javax.swing.JFrame {
         if (drone3 && jRadioButton2.isSelected()) {
             project.addCommandToSubproject(2, new Command(DroneCmd.DOWN, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
         }
-        jTable1.updateUI();   
+        jTable1.updateUI();
     }//GEN-LAST:event_jButton10MouseClicked
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
@@ -922,8 +968,8 @@ public class AppWindow extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(this);
-       project.loadProject(chooser.getSelectedFile().getAbsolutePath(), connectedNode);
-       jTable1.updateUI();
+        project.loadProject(chooser.getSelectedFile().getAbsolutePath(), connectedNode);
+        jTable1.updateUI();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -931,7 +977,7 @@ public class AppWindow extends javax.swing.JFrame {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("wav");
         chooser.setFileFilter(filter);
         chooser.showOpenDialog(this);
-       project.loadSound(chooser.getSelectedFile().getAbsolutePath());
+        project.loadSound(chooser.getSelectedFile().getAbsolutePath());
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem2MouseClicked
@@ -952,19 +998,17 @@ public class AppWindow extends javax.swing.JFrame {
         project.setInterrupt(true);
     }//GEN-LAST:event_jButton14MouseClicked
 
+    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox4ActionPerformed
+
     private Timer timer = new Timer();
     private TimerTask task;
 
     private Boolean drone1 = false;
 
-    private void reloadTable() {
-        DefaultTableModel tab = (DefaultTableModel) jTable1.getModel();
-        Vector data = tab.getDataVector();
-        Vector firstColumn = (Vector) data.get(0);
-        firstColumn.add(new String("foo"));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel arrayButton;
     private javax.swing.JLabel battery1;
     private javax.swing.JLabel battery2;
     private javax.swing.JLabel battery3;
@@ -987,11 +1031,10 @@ public class AppWindow extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -1003,6 +1046,8 @@ public class AppWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
+    private javax.swing.JSpinner jSpinner3;
+    private javax.swing.JSpinner jSpinner4;
     private javax.swing.JTable jTable1;
     private java.awt.Panel mainPanel;
     private javax.swing.JPanel panelOne;

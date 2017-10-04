@@ -5,30 +5,20 @@
  */
 package de.multidrone.backend;
 
-import com.github.example.PlaySound;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import org.ros.node.ConnectedNode;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+
 
 /**
  *
@@ -169,72 +159,17 @@ public class Project implements TableModel {
          }
 
          }.start();*/
-        new Thread() {
-            @Override
-            public void run() {
-                ArrayList<Command> pom = project.get(0);
-                for (Command cmd : pom) {
-                    try {
-                        if (!interrupt) {
-                            droneList.get(0).runCmd(cmd.getName(), cmd.getStrength());
-
-                            Thread.sleep(cmd.getDuration());
-
-                        } else {
-                            droneList.get(0).runCmd(DroneCmd.HOVER, 100);
-                            Thread.sleep(1000);
-                            droneList.get(0).runCmd(DroneCmd.LAND, 100);
-                        }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }.start();
-        new Thread() {
-            @Override
-            public void run() {
-                ArrayList<Command> pom = project.get(1);
-                for (Command cmd : pom) {
-                    try {
-                        if (!interrupt) {
-                            droneList.get(1).runCmd(cmd.getName(), cmd.getStrength());
-
-                            Thread.sleep(cmd.getDuration());
-
-                        } else {
-                            droneList.get(1).runCmd(DroneCmd.HOVER, 100);
-                            Thread.sleep(1000);
-                            droneList.get(1).runCmd(DroneCmd.LAND, 100);
-                        }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }.start();
-        new Thread() {
-            @Override
-            public void run() {
-                ArrayList<Command> pom = project.get(2);
-                for (Command cmd : pom) {
-                    try {
-                        if (!interrupt) {
-                            droneList.get(2).runCmd(cmd.getName(), cmd.getStrength());
-
-                            Thread.sleep(cmd.getDuration());
-
-                        } else {
-                            droneList.get(2).runCmd(DroneCmd.HOVER, 100);
-                            Thread.sleep(1000);
-                            droneList.get(2).runCmd(DroneCmd.LAND, 100);
-                        }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Project.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }.start();
+        
+        
+        
+        ArrayList<PlayStory> storyList= new ArrayList<>();
+        for(int i=0; i< project.size();i++){
+            storyList.add(new PlayStory(project.get(i), droneList.get(i)));
+        }
+        
+        for(PlayStory story: storyList){
+            story.run();
+        }
 
     }
 
