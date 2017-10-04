@@ -19,7 +19,6 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableModel;
 import org.ros.node.ConnectedNode;
 
 /**
@@ -28,36 +27,64 @@ import org.ros.node.ConnectedNode;
  */
 public class AppWindow extends javax.swing.JFrame {
 
-    private boolean drone2 = false;
-    private boolean drone3 = false;
-    final private Drone Ddrone1;
-    final private Drone Ddrone2;
-    final private Drone Ddrone3;
+    private Timer timer = new Timer();
+    private TimerTask task;
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel arrayButton;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JButton cleanBtn;
+    private javax.swing.JSpinner durationSpiner;
+    private javax.swing.JSpinner forceSpiner;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JRadioButton jRadioButton1;
+    private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSpinner jSpinner3;
+    private javax.swing.JTable jTable1;
+    private java.awt.Panel mainPanel;
+    private javax.swing.JButton nextBtn;
+    private javax.swing.JPanel panelOne;
+    private javax.swing.JPanel panelTwo;
+    private javax.swing.JButton playBtn;
+    private javax.swing.JButton resetBtn;
+    // End of variables declaration//GEN-END:variables
+
     private DefaultTableModel dataModel;
     private Project project = new Project("demoProject");
-    private boolean interrupt;
     private final ConnectedNode connectedNode;
-    private final ArrayList<JButton> buttonList = new ArrayList<JButton>();
+    private final ArrayList<MyButton> buttonList = new ArrayList<>();
 
     /**
      * Creates new form AppWindow
      */
     public AppWindow(final ConnectedNode connectedNode) {
+
         this.connectedNode = connectedNode;
         initComponents();
-        Ddrone1 = new Drone("ardrone_1", connectedNode);
-        Ddrone2 = new Drone("ardrone_2", connectedNode);
-        Ddrone3 = new Drone("ardrone_3", connectedNode);
-        stateDrone1.setBackground(Color.GREEN);
-        stateDrone2.setBackground(Color.GREEN);
-        stateDrone3.setBackground(Color.GREEN);
         setupTimer();
         buttonGroup2.add(jRadioButton1);
         buttonGroup2.add(jRadioButton2);
+        buttonGroup2.add(jRadioButton3);
+        disablePlayButton();
         dataModel = new DefaultTableModel();
-        // project.addSubproject(new ArrayList<Command>(), "ardrone_1", Ddrone1);
-        // project.addSubproject(new ArrayList<Command>(), "bellll", Ddrone2);
-        // project.addSubproject(new ArrayList<Command>(), "ardrone_3", Ddrone3);
         jRadioButton1.setSelected(true);
     }
 
@@ -65,28 +92,17 @@ public class AppWindow extends javax.swing.JFrame {
         this.task = new TimerTask() {
             @Override
             public void run() {
-                if (Ddrone1.getTimeOfLastMessage() >= System.currentTimeMillis() - 1000) {
-                    stateDrone1.setBackground(Color.GREEN);
-                    battery1.setText("Batery: " + Ddrone1.getNavdata().getBatteryPercent() + " %");
-                } else {
-                    stateDrone1.setBackground(Color.RED);
-                    battery1.setText("Batery: unknown");
+                if (jRadioButton3.isSelected()) {
+                    for (int i = 0; i < buttonList.size(); i++) {
+                        if (project.getDrone(i).getTimeOfLastMessage() >= System.currentTimeMillis() - 1000) {
+                            buttonList.get(i).setBackground(Color.GREEN);
+                            buttonList.get(i).setText(project.getDrone(i).getNavdata().getBatteryPercent() + " %");
+                        } else {
+                            buttonList.get(i).setBackground(Color.RED);
+                            buttonList.get(i).setText("- %");
+                        }
+                    }
                 }
-                if (Ddrone2.getTimeOfLastMessage() >= System.currentTimeMillis() - 1000) {
-                    stateDrone2.setBackground(Color.GREEN);
-                    battery2.setText("Batery: " + Ddrone2.getNavdata().getBatteryPercent() + " %");
-                } else {
-                    stateDrone2.setBackground(Color.RED);
-                    battery2.setText("Batery: unknown");
-                }
-                if (Ddrone3.getTimeOfLastMessage() >= System.currentTimeMillis() - 1000) {
-                    stateDrone3.setBackground(Color.GREEN);
-                    battery3.setText("Batery: " + Ddrone3.getNavdata().getBatteryPercent() + " %");
-                } else {
-                    stateDrone3.setBackground(Color.RED);
-                    battery3.setText("Batery: unknown");
-                }
-                // timer.scheduleAtFixedRate(task, 0, 1000); //1000ms = 1sec
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
@@ -103,13 +119,11 @@ public class AppWindow extends javax.swing.JFrame {
         buttonGroup2 = new javax.swing.ButtonGroup();
         mainPanel = new java.awt.Panel();
         panelOne = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        nextBtn = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jSpinner3 = new javax.swing.JSpinner();
+        jButton1 = new javax.swing.JButton();
         panelTwo = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -121,47 +135,31 @@ public class AppWindow extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton11 = new javax.swing.JButton();
         jButton12 = new javax.swing.JButton();
-        stateDrone1 = new javax.swing.JButton();
-        stateDrone2 = new javax.swing.JButton();
-        stateDrone3 = new javax.swing.JButton();
-        battery1 = new javax.swing.JLabel();
-        battery2 = new javax.swing.JLabel();
-        battery3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
-        jButton15 = new javax.swing.JButton();
-        jSpinner1 = new javax.swing.JSpinner();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        playBtn = new javax.swing.JButton();
+        resetBtn = new javax.swing.JButton();
+        cleanBtn = new javax.swing.JButton();
+        durationSpiner = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
-        jSpinner2 = new javax.swing.JSpinner();
+        forceSpiner = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
-        jSpinner4 = new javax.swing.JSpinner();
-        jCheckBox4 = new javax.swing.JCheckBox();
         arrayButton = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jButton13 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 800));
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
-        jButton1.setText("next >");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        nextBtn.setText("next >");
+        nextBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                nextBtnMouseClicked(evt);
             }
         });
 
@@ -169,20 +167,32 @@ public class AppWindow extends javax.swing.JFrame {
 
         jSpinner3.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
 
+        jButton1.setText("load project");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelOneLayout = new javax.swing.GroupLayout(panelOne);
         panelOne.setLayout(panelOneLayout);
         panelOneLayout.setHorizontalGroup(
             panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOneLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
             .addGroup(panelOneLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel6)
-                .addGap(18, 18, 18)
-                .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(352, Short.MAX_VALUE))
+                .addGroup(panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelOneLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(nextBtn))
+                    .addGroup(panelOneLayout.createSequentialGroup()
+                        .addGroup(panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelOneLayout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(18, 18, 18)
+                                .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1))
+                        .addGap(0, 340, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         panelOneLayout.setVerticalGroup(
             panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,63 +201,19 @@ public class AppWindow extends javax.swing.JFrame {
                 .addGroup(panelOneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 557, Short.MAX_VALUE)
+                .addGap(70, 70, 70)
                 .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 485, Short.MAX_VALUE)
+                .addComponent(nextBtn)
                 .addContainerGap())
         );
 
         mainPanel.add(panelOne, "card2");
 
-        jCheckBox1.setText("ardrone_1");
-        jCheckBox1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jCheckBox1MouseClicked(evt);
-            }
-        });
-        jCheckBox1.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jCheckBox1StateChanged(evt);
-            }
-        });
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
-
-        jCheckBox2.setText("ardrone_2");
-        jCheckBox2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jCheckBox2MouseClicked(evt);
-            }
-        });
-        jCheckBox2.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jCheckBox2StateChanged(evt);
-            }
-        });
-
-        jCheckBox3.setText("ardrone_3");
-        jCheckBox3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jCheckBox3MouseClicked(evt);
-            }
-        });
-        jCheckBox3.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jCheckBox3StateChanged(evt);
-            }
-        });
-
         jButton3.setText("takeoff");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton3MouseClicked(evt);
-            }
-        });
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
             }
         });
 
@@ -313,11 +279,6 @@ public class AppWindow extends javax.swing.JFrame {
                 jButton11MouseClicked(evt);
             }
         });
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
-            }
-        });
 
         jButton12.setText("turnRight");
         jButton12.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -325,12 +286,6 @@ public class AppWindow extends javax.swing.JFrame {
                 jButton12MouseClicked(evt);
             }
         });
-
-        battery1.setText("jLabel4");
-
-        battery2.setText("jLabel5");
-
-        battery3.setText("jLabel6");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -342,64 +297,64 @@ public class AppWindow extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jRadioButton1.setText("control");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+        jRadioButton1.setText("Direct Control");
+        jRadioButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadioButton1MouseClicked(evt);
             }
         });
 
-        jRadioButton2.setText("Project");
+        jRadioButton2.setText("Add cmd to Project");
+        jRadioButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadioButton2MouseClicked(evt);
+            }
+        });
 
-        jButton13.setText("play");
+        jRadioButton3.setText("Play Project");
+        jRadioButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jRadioButton3MouseClicked(evt);
+            }
+        });
+
+        playBtn.setText("play");
+        playBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playBtnMouseClicked(evt);
+            }
+        });
+
+        resetBtn.setText("reset");
+        resetBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resetBtnMouseClicked(evt);
+            }
+        });
+
+        cleanBtn.setText("clean");
+        cleanBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cleanBtnMouseClicked(evt);
+            }
+        });
+
+        durationSpiner.setModel(new javax.swing.SpinnerNumberModel(100, 100, 10000, 100));
+
+        jLabel4.setText("duration in [ms]");
+
+        forceSpiner.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
+
+        jLabel5.setText("Power [%]");
+
+        arrayButton.setLayout(new java.awt.GridLayout(1, 0));
+
+        jButton13.setText("save project");
         jButton13.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton13MouseClicked(evt);
             }
         });
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
-            }
-        });
-
-        jButton14.setText("reset");
-        jButton14.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton14MouseClicked(evt);
-            }
-        });
-
-        jButton15.setText("clean");
-        jButton15.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton15MouseClicked(evt);
-            }
-        });
-        jButton15.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton15ActionPerformed(evt);
-            }
-        });
-
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(100, 100, 10000, 100));
-
-        jLabel4.setText("duration in [ms]");
-
-        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(10, 10, 100, 10));
-
-        jLabel5.setText("Power [%]");
-
-        jSpinner4.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
-
-        jCheckBox4.setText("all");
-        jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox4ActionPerformed(evt);
-            }
-        });
-
-        arrayButton.setLayout(new java.awt.GridLayout());
 
         javax.swing.GroupLayout panelTwoLayout = new javax.swing.GroupLayout(panelTwo);
         panelTwo.setLayout(panelTwoLayout);
@@ -410,215 +365,137 @@ public class AppWindow extends javax.swing.JFrame {
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(36, 36, 36)
-                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton11)
-                            .addComponent(jButton6))
-                        .addGap(39, 39, 39)
-                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelTwoLayout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addComponent(jButton12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelTwoLayout.createSequentialGroup()
-                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addComponent(jButton8)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addGap(0, 18, Short.MAX_VALUE)
-                                        .addComponent(jLabel5)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jRadioButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jSpinner1)))))
+                    .addComponent(arrayButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelTwoLayout.createSequentialGroup()
                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4))
-                        .addGap(77, 77, 77)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton7)
-                            .addComponent(jButton5))
-                        .addGap(107, 107, 107)
+                            .addComponent(forceSpiner)
+                            .addComponent(durationSpiner)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cleanBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(playBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelTwoLayout.createSequentialGroup()
                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTwoLayout.createSequentialGroup()
-                                .addComponent(jButton9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jButton2)
+                                .addGap(36, 36, 36)
+                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton11)
+                                    .addGroup(panelTwoLayout.createSequentialGroup()
+                                        .addGap(14, 14, 14)
+                                        .addComponent(jButton6)))
+                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelTwoLayout.createSequentialGroup()
+                                        .addGap(60, 60, 60)
+                                        .addComponent(jButton12))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton8)
+                                        .addGap(15, 15, 15))))
+                            .addGroup(panelTwoLayout.createSequentialGroup()
+                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton3)
+                                    .addComponent(jButton4))
+                                .addGap(89, 89, 89)
+                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButton7)
+                                    .addComponent(jButton5))))
+                        .addGap(33, 33, 33)
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTwoLayout.createSequentialGroup()
                                 .addComponent(jButton10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton15, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(panelTwoLayout.createSequentialGroup()
-                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jRadioButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
+                                    .addComponent(jRadioButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jRadioButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(14, 14, 14))
                             .addGroup(panelTwoLayout.createSequentialGroup()
-                                .addComponent(jCheckBox1)
-                                .addGap(59, 59, 59)
-                                .addComponent(jCheckBox2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jCheckBox3)
-                                .addGap(18, 18, 18)
-                                .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox4))
+                                .addComponent(jButton9)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(panelTwoLayout.createSequentialGroup()
-                                .addComponent(stateDrone1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(battery1)
-                                    .addGroup(panelTwoLayout.createSequentialGroup()
-                                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelTwoLayout.createSequentialGroup()
-                                                .addGap(341, 341, 341)
-                                                .addComponent(stateDrone3))
-                                            .addGroup(panelTwoLayout.createSequentialGroup()
-                                                .addGap(132, 132, 132)
-                                                .addComponent(stateDrone2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(battery2)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(battery3)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(100, 100, 100))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelTwoLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(arrayButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton13)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         panelTwoLayout.setVerticalGroup(
             panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTwoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(stateDrone3)
-                        .addComponent(stateDrone2))
-                    .addComponent(stateDrone1, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(battery1)
-                    .addComponent(battery2)
-                    .addComponent(battery3))
-                .addGap(22, 22, 22)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton11)
                     .addComponent(jButton12)
-                    .addComponent(jButton13))
+                    .addComponent(jRadioButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton5)
                     .addComponent(jButton9)
-                    .addComponent(jRadioButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton6)
-                        .addComponent(jButton8)
-                        .addComponent(jButton2))
                     .addComponent(jRadioButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton14)
+                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton6)
+                    .addComponent(jButton8)
+                    .addComponent(jButton2)
+                    .addComponent(jRadioButton3)
+                    .addComponent(jButton10))
+                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTwoLayout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(playBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(resetBtn))
+                    .addGroup(panelTwoLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton7)
+                            .addComponent(jButton4))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton13)
+                .addGap(8, 8, 8)
+                .addComponent(cleanBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(forceSpiner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton7)
-                    .addComponent(jButton10)
-                    .addComponent(jButton15))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(durationSpiner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(arrayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(arrayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         mainPanel.add(panelTwo, "card3");
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setText("File");
-
-        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem2.setText("Save Project");
-        jMenuItem2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItem2MouseClicked(evt);
-            }
-        });
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem2);
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Load Project");
-        jMenuItem1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItem1MouseClicked(evt);
-            }
-        });
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem3.setText("Load Song");
-        jMenuItem3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jMenuItem3MouseClicked(evt);
-            }
-        });
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem3);
-
-        jMenuBar1.add(jMenu1);
-
-        setJMenuBar(jMenuBar1);
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void nextBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nextBtnMouseClicked
         CardLayout card = (CardLayout) mainPanel.getLayout();
-
         int howMany = (int) jSpinner3.getValue();
 
         for (int i = 0; i < howMany; i++) {
-            JButton btn = new JButton((i + 1) + " -%");
-            btn.setBackground(Color.red);
+            MyButton btn = new MyButton(" -%");
+            btn.addActionListener(btn);
             buttonList.add(btn);
-            project.addSubprojectNew("ardrone_" + i, new Drone("ardrone_" + i, connectedNode));
+            int number = i + 1;
+            project.addSubprojectNew("ardrone_" + number, new Drone("ardrone_" + number, connectedNode));
             TableColumn tc = new TableColumn();
             tc.setHeaderValue("ardrone_" + i);
             jTable1.getColumnModel().addColumn(tc);
@@ -630,430 +507,134 @@ public class AppWindow extends javax.swing.JFrame {
         jTable1.updateUI();
         card.show(mainPanel, "card3");
 
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_nextBtnMouseClicked
 
-    private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.turnRight((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.turnRight((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.turnRight((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.TURN_RIGHT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.TURN_RIGHT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.TURN_RIGHT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
+    private void checkBtn(DroneCmd cmd) {
+        for (int i = 0; i < buttonList.size(); i++) {
+
+            if (buttonList.get(i).getState() && jRadioButton1.isSelected()) {
+
+                project.getDrone(i).runCmd(cmd, (int) forceSpiner.getValue());
+            }
+            if (buttonList.get(i).getState() && jRadioButton2.isSelected()) {
+                project.addCommandToSubproject(i, new Command(cmd, (int) durationSpiner.getValue(), (int) forceSpiner.getValue()));
+            }
         }
         jTable1.updateUI();
+    }
+
+
+    private void jButton12MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton12MouseClicked
+        checkBtn(DroneCmd.TURN_RIGHT);
     }//GEN-LAST:event_jButton12MouseClicked
 
     private void jButton11MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton11MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.turnLeft((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.turnLeft((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.turnLeft((int) jSpinner2.getValue());
-        }
-
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.TURN_LEFT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.TURN_LEFT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.TURN_LEFT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.TURN_LEFT);
     }//GEN-LAST:event_jButton11MouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.hover();
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.hover();
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.hover();
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.HOVER, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.HOVER, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.HOVER, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.HOVER);
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton10MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.down((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.down((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.down((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.DOWN, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.DOWN, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.DOWN, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.DOWN);
     }//GEN-LAST:event_jButton10MouseClicked
 
     private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.up((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.up((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.up((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.UP, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.UP, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.UP, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.UP);
     }//GEN-LAST:event_jButton9MouseClicked
 
     private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.right((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.right((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.right((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.RIGHT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.RIGHT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.RIGHT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.RIGHT);
     }//GEN-LAST:event_jButton8MouseClicked
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.backward((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.backward((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.backward((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.BACKWARD, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.BACKWARD, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.BACKWARD, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.BACKWARD);
     }//GEN-LAST:event_jButton7MouseClicked
 
     private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.left((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.left((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.left((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.LEFT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.LEFT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.LEFT, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.LEFT);
     }//GEN-LAST:event_jButton6MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.forward((int) jSpinner2.getValue());
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.forward((int) jSpinner2.getValue());
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.forward((int) jSpinner2.getValue());
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.FORWARD, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.FORWARD, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.FORWARD, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.FORWARD);
     }//GEN-LAST:event_jButton5MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.land();
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.land();
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.land();
-        }
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.LAND, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.LAND, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.LAND, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.LAND);
     }//GEN-LAST:event_jButton4MouseClicked
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        if (drone1 && jRadioButton1.isSelected()) {
-            Ddrone1.takeoff();
-        }
-        if (drone2 && jRadioButton1.isSelected()) {
-            Ddrone2.takeoff();
-        }
-        if (drone3 && jRadioButton1.isSelected()) {
-            Ddrone3.takeoff();
-        }
-
-        if (drone1 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(0, new Command(DroneCmd.TAKE_OFF, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone2 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(1, new Command(DroneCmd.TAKE_OFF, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        if (drone3 && jRadioButton2.isSelected()) {
-            project.addCommandToSubproject(2, new Command(DroneCmd.TAKE_OFF, (int) jSpinner1.getValue(), (int) jSpinner2.getValue()));
-        }
-        jTable1.updateUI();
+        checkBtn(DroneCmd.TAKE_OFF);
     }//GEN-LAST:event_jButton3MouseClicked
 
-    private void jCheckBox3StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBox3StateChanged
-
-    }//GEN-LAST:event_jCheckBox3StateChanged
-
-    private void jCheckBox3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox3MouseClicked
-        if (drone3 == false) {
-            drone3 = true;
-        } else {
-            drone3 = false;
-        }
-    }//GEN-LAST:event_jCheckBox3MouseClicked
-
-    private void jCheckBox2StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBox2StateChanged
-
-    }//GEN-LAST:event_jCheckBox2StateChanged
-
-    private void jCheckBox2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox2MouseClicked
-        if (drone2 == false) {
-            drone2 = true;
-        } else {
-            drone2 = false;
-        }
-    }//GEN-LAST:event_jCheckBox2MouseClicked
-
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
-
-    private void jCheckBox1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jCheckBox1StateChanged
-
-    }//GEN-LAST:event_jCheckBox1StateChanged
-
-    private void jCheckBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBox1MouseClicked
-        if (drone1 == false) {
-            drone1 = true;
-        } else {
-            drone1 = false;
-        }
-    }//GEN-LAST:event_jCheckBox1MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton13ActionPerformed
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
-
-    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton15ActionPerformed
-
-    private void jButton15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton15MouseClicked
+    private void cleanBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cleanBtnMouseClicked
         //dataModel = new DefaultTableModel();
         project.clean();
         jTable1.updateUI();
 
-    }//GEN-LAST:event_jButton15MouseClicked
+    }//GEN-LAST:event_cleanBtnMouseClicked
 
-    private void jButton13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton13MouseClicked
+    private void playBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playBtnMouseClicked
         project.setInterrupt(false);
         project.playProject();
+    }//GEN-LAST:event_playBtnMouseClicked
+
+    private void resetBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resetBtnMouseClicked
+        project.setInterrupt(true);
+    }//GEN-LAST:event_resetBtnMouseClicked
+
+    private void jRadioButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButton3MouseClicked
+        playBtn.setEnabled(true);
+        resetBtn.setEnabled(true);
+        forceSpiner.setEnabled(false);
+        durationSpiner.setEnabled(false);
+        cleanBtn.setEnabled(false);
+    }//GEN-LAST:event_jRadioButton3MouseClicked
+
+    private void jRadioButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButton2MouseClicked
+        disablePlayButton();
+    }//GEN-LAST:event_jRadioButton2MouseClicked
+
+    private void jRadioButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButton1MouseClicked
+        disablePlayButton();
+    }//GEN-LAST:event_jRadioButton1MouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        loadProject();
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton13MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton13MouseClicked
+        saveProject();
     }//GEN-LAST:event_jButton13MouseClicked
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton11ActionPerformed
-
-    private void jMenuItem1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem1MouseClicked
-        JFileChooser chooser = new JFileChooser();
-        chooser.showOpenDialog(this);
-        project.loadProject(chooser.getSelectedFile().getAbsolutePath(), connectedNode);
-        jTable1.updateUI();
-    }//GEN-LAST:event_jMenuItem1MouseClicked
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void saveProject() {
         JFileChooser chooser = new JFileChooser();
         chooser.showSaveDialog(this);
         project.saveProject(chooser.getSelectedFile().getAbsolutePath());
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void loadProject() {
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(this);
         project.loadProject(chooser.getSelectedFile().getAbsolutePath(), connectedNode);
+        for (int i = 0; i < project.getColumnCount(); i++) {
+            MyButton btn = new MyButton(" -%");
+            btn.addActionListener(btn);
+            buttonList.add(btn);
+            arrayButton.add(btn);
+        }
+        jTable1.setModel(project);
         jTable1.updateUI();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        CardLayout card = (CardLayout) mainPanel.getLayout();
+        card.show(mainPanel, "card3");
+    }
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("wav");
-        chooser.setFileFilter(filter);
-        chooser.showOpenDialog(this);
-        project.loadSound(chooser.getSelectedFile().getAbsolutePath());
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
-
-    private void jMenuItem2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem2MouseClicked
-        JFileChooser chooser = new JFileChooser();
-        chooser.showSaveDialog(this);
-        project.saveProject(chooser.getSelectedFile().getAbsolutePath());
-    }//GEN-LAST:event_jMenuItem2MouseClicked
-
-    private void jMenuItem3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenuItem3MouseClicked
-        JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("wav");
-        chooser.setFileFilter(filter);
-        chooser.showOpenDialog(this);
-        project.loadSound(chooser.getSelectedFile().getAbsolutePath());
-    }//GEN-LAST:event_jMenuItem3MouseClicked
-
-    private void jButton14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton14MouseClicked
-        project.setInterrupt(true);
-    }//GEN-LAST:event_jButton14MouseClicked
-
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
-
-    private Timer timer = new Timer();
-    private TimerTask task;
-
-    private Boolean drone1 = false;
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel arrayButton;
-    private javax.swing.JLabel battery1;
-    private javax.swing.JLabel battery2;
-    private javax.swing.JLabel battery3;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton15;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
-    private javax.swing.JSpinner jSpinner4;
-    private javax.swing.JTable jTable1;
-    private java.awt.Panel mainPanel;
-    private javax.swing.JPanel panelOne;
-    private javax.swing.JPanel panelTwo;
-    private javax.swing.JButton stateDrone1;
-    private javax.swing.JButton stateDrone2;
-    private javax.swing.JButton stateDrone3;
-    // End of variables declaration//GEN-END:variables
+    private void disablePlayButton() {
+        playBtn.setEnabled(false);
+        resetBtn.setEnabled(false);
+        forceSpiner.setEnabled(true);
+        durationSpiner.setEnabled(true);
+        cleanBtn.setEnabled(true);
+    }
 }

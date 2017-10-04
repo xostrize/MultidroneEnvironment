@@ -58,6 +58,14 @@ public class Project implements TableModel {
     public ArrayList<Drone> getDroneList() {
         return droneList;
     }
+    
+    public Drone getDrone(int index){
+        try{
+            return droneList.get(index);
+        }catch(IndexOutOfBoundsException ex){
+            return null;
+        }
+    }
 
     public String getSong() {
         return song;
@@ -141,34 +149,14 @@ public class Project implements TableModel {
     }
 
     public void playProject() {
-
-        /* new Thread() {
-         @Override
-         public void run() {
-         InputStream in;
-         try {
-         in = new FileInputStream(song);
-         AudioStream audio = new AudioStream(in);
-         AudioPlayer.player.start(audio);
-         } catch (FileNotFoundException ex) {
-         Logger.getLogger(PlaySound.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (IOException ex) {
-         Logger.getLogger(PlaySound.class.getName()).log(Level.SEVERE, null, ex);
-         }
-
-         }
-
-         }.start();*/
-        
-        
-        
+            
         ArrayList<PlayStory> storyList= new ArrayList<>();
         for(int i=0; i< project.size();i++){
             storyList.add(new PlayStory(project.get(i), droneList.get(i)));
         }
         
         for(PlayStory story: storyList){
-            story.run();
+            new Thread(story).start();
         }
 
     }
