@@ -21,7 +21,7 @@ mainClassName = 'org.ros.RosRun' //'de.multidrone.backend.Builder'
 
 
 repositories {
-
+   
     mavenCentral()
     mavenLocal()
 }
@@ -39,7 +39,7 @@ which usually occur on minor and major version numbers.
 dependencies {
     /* An external maven artifact dependency */
     compile 'org.ros.rosjava_core:rosjava:[0.2,0.3)'
-   // compile 'org.ros.rosjava_messages:ardrone_autonomy:1.4.1'
+    // compile 'org.ros.rosjava_messages:ardrone_autonomy:1.4.1'
     
 
     //compile files( "/usr/lib/jvm/java-7-oracle/jre/lib/jfxrt.jar" )
@@ -47,8 +47,14 @@ dependencies {
     /* Example of a local subproject dependency */ 
     /* compile project(':sibling_gradle_project') */
     
+    // https://mvnrepository.com/artifact/com.illposed.osc/javaosc-core
+    // example for this program https://www.illposed.com/software/javaosc.html
+    compile group: 'com.illposed.osc', name: 'javaosc-core', version: '0.4'
+   // compile files( "/home/student/tum_simulator_ws/devel/share/maven/com/illposed/osc/javaosc-core-0.4.jar")
+
+    
     // https://mvnrepository.com/artifact/org.wildfly.swarm/javafx
-   //compile group: 'org.wildfly.swarm', name: 'javafx', version: '2017.9.5'
+    //compile group: 'org.wildfly.swarm', name: 'javafx', version: '2017.9.5'
 
 }
 

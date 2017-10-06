@@ -8,7 +8,9 @@ package de.multidrone.frontend;
 import de.multidrone.backend.Command;
 import de.multidrone.backend.Drone;
 import de.multidrone.backend.DroneCmd;
+import de.multidrone.backend.osc.OSClistener;
 import de.multidrone.backend.Project;
+import de.multidrone.backend.osc.OSCContainer;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -16,10 +18,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import org.ros.node.ConnectedNode;
+import de.multidrone.backend.osc.OSCenum;
 
 /**
  *
@@ -41,6 +43,7 @@ public class AppWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -71,6 +74,7 @@ public class AppWindow extends javax.swing.JFrame {
     private Project project = new Project("demoProject");
     private final ConnectedNode connectedNode;
     private final ArrayList<MyButton> buttonList = new ArrayList<>();
+    private OSClistener oscListener;
 
     /**
      * Creates new form AppWindow
@@ -86,6 +90,7 @@ public class AppWindow extends javax.swing.JFrame {
         disablePlayButton();
         dataModel = new DefaultTableModel();
         jRadioButton1.setSelected(true);
+        oscListener = null;
     }
 
     private void setupTimer() {
@@ -150,6 +155,7 @@ public class AppWindow extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         arrayButton = new javax.swing.JPanel();
         jButton13 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 800));
@@ -356,6 +362,13 @@ public class AppWindow extends javax.swing.JFrame {
             }
         });
 
+        jButton14.setText("wait for OSC");
+        jButton14.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton14MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTwoLayout = new javax.swing.GroupLayout(panelTwo);
         panelTwo.setLayout(panelTwoLayout);
         panelTwoLayout.setHorizontalGroup(
@@ -374,11 +387,6 @@ public class AppWindow extends javax.swing.JFrame {
                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(forceSpiner)
                             .addComponent(durationSpiner)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cleanBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(playBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelTwoLayout.createSequentialGroup()
                         .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelTwoLayout.createSequentialGroup()
@@ -423,7 +431,15 @@ public class AppWindow extends javax.swing.JFrame {
                                 .addComponent(resetBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(panelTwoLayout.createSequentialGroup()
                         .addComponent(jButton13)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cleanBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(playBtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTwoLayout.createSequentialGroup()
+                                .addComponent(jButton14)
+                                .addGap(253, 253, 253)))))
                 .addContainerGap())
         );
         panelTwoLayout.setVerticalGroup(
@@ -461,7 +477,9 @@ public class AppWindow extends javax.swing.JFrame {
                             .addComponent(jButton7)
                             .addComponent(jButton4))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton13)
+                .addGroup(panelTwoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton13)
+                    .addComponent(jButton14))
                 .addGap(8, 8, 8)
                 .addComponent(cleanBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -608,6 +626,16 @@ public class AppWindow extends javax.swing.JFrame {
         saveProject();
     }//GEN-LAST:event_jButton13MouseClicked
 
+    private void jButton14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton14MouseClicked
+        if (jButton14.getBackground() != Color.RED) {
+            jButton14.setBackground(Color.green);
+            oscListener = new OSClistener(this);
+        } else {
+            jButton14.setBackground(Color.RED);
+            oscListener = null;
+        }
+    }//GEN-LAST:event_jButton14MouseClicked
+
     private void saveProject() {
         JFileChooser chooser = new JFileChooser();
         chooser.showSaveDialog(this);
@@ -636,5 +664,22 @@ public class AppWindow extends javax.swing.JFrame {
         forceSpiner.setEnabled(true);
         durationSpiner.setEnabled(true);
         cleanBtn.setEnabled(true);
+    }
+
+    public void runOSCdirection(OSCContainer container) {
+        switch (container.getCmd()) {
+            case START:
+                playBtnMouseClicked(null);
+                break;
+            case STOP:
+                resetBtnMouseClicked(null);
+                break;
+            case RESET:
+                resetBtnMouseClicked(null);
+                break;
+            default:
+                resetBtnMouseClicked(null);
+                break;
+        }
     }
 }
